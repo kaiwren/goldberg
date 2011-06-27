@@ -87,6 +87,7 @@ class Project < ActiveRecord::Base
   def build_command
     bundler_command = File.exists?(File.join(self.code_path, 'Gemfile')) ? "(#{Bundle.check_and_install}) && " : ""
     bundler_command << (config.command || "rake #{config.rake_task}")
+    niced_command = "nice -n #{config.nice} #{bundler_command}"
   end
 
   def map_to_cctray_project_status

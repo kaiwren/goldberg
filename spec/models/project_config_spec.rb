@@ -7,6 +7,10 @@ describe ProjectConfig do
     it "for build frequency should be 20 seconds" do
       config.frequency.should == 20
     end
+    
+    it "for niceness of the build process should be 0" do
+      config.nice.should == 0
+    end
 
     it "environment variables should be an empty hash" do
       config.environment_variables.should == {}

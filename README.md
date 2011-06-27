@@ -13,7 +13,7 @@ Visit [goldberg.c42.in][] to see a live Goldberg server.
 ### Prerequisites
 
 * Ruby - CRuby 1.8.7/1.9.2 and JRuby 1.6.2 and upward are supported
-* Git > v1.6.5 (svn, hg and bzr are currently unsupported, but are on the roadmap)
+* Git > v1.6.5 (svn, hg and bzr are currently unsupported, but are in the roadmap)
 * RVM if you want to be able to run projects on different rubies.
 * Your project should have a Gemfile for [Bundler][].
 
@@ -88,7 +88,11 @@ Every project in goldberg can have its own custom configuration by means of addi
         config.environment_variables = {"FOO" => "bar"}
         config.after_build Proc.new { |build, project| `touch ~/Desktop/actually_built`}
         config.timeout = 10.minutes
-        config.command = 'make' #to be used if you're using anything other than rake
+        config.nice = 19 # Use this to reduce the scheduling priority (niceness) of CPU intensive builds
+                         # that may otherwise leave the Goldberg web application unresponsive. Defaults to 0.
+                         # Valid range is -20 for the highest priority to 19 (on Linux) and 20 (on OSX)
+                         # for the lowest priority.
+        config.command = 'make' # to be used if you're using anything other than rake
       end
 
 If you want the project to be checked for updates every 5 seconds, you will need to change the poller frequency to less than 5 seconds using `goldberg.yml` as mentioned above.

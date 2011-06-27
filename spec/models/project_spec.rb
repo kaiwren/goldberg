@@ -104,12 +104,18 @@ describe Project do
       File.should_receive(:exists?).with(File.join(project.code_path, 'Gemfile'))
       File.stub!(:exists?).with(File.expand_path('goldberg_config.rb', project.code_path)).and_return(true)
       Environment.stub!(:read_file).with(File.expand_path('goldberg_config.rb', project.code_path)).and_return("Project.configure { |config| config.command = 'cmake' }")
-      project.build_command.should == 'cmake'
+      project.build_command.should eq('nice -n 0 cmake')
     end
 
     it "defaults the custom command to rake" do
+      Factory(:project).build_command.should eq('nice -n 0 rake default')
+    end
+    
+    it "prefixes the command with the configured niceness" do
       project = Factory(:project)
-      project.build_command.should == 'rake default'
+      project.stub(:config).and_return(ProjectConfig.new)
+      project.config.nice = 15
+      project.build_command.should eq('nice -n 15 rake default')
     end
   end
 
